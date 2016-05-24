@@ -4,6 +4,7 @@ export tps_solve, tps_energy, tps_deform
 
 type ThinPlateSpline
 	λ  # Stiffness.
+	x1 # control points
 	Y  # Homogeneous control point coordinates
 	Φ  # TPS kernel
 	d  # Affine component
@@ -43,7 +44,7 @@ function tps_solve(x,y,λ,compute_affine=true)
 
 	# affine component
 	d = compute_affine ?  r\(q1'*(Y - Φ*c)) : []
-	return ThinPlateSpline(λ,Y,Φ,d,c)
+	return ThinPlateSpline(λ,x,Y,Φ,d,c)
 end
 
 # Thin-plate spline bending energy at minimum
@@ -53,8 +54,8 @@ tps_energy(tps::ThinPlateSpline) = tps.λ*trace(tps.c*tps.Y')
 # if affine component d and coefficients c are known.
 # x1 are coordinates of control points.
 # x2 are coordinates of points to be deformed.
-function tps_deform(x1,x2,tps::ThinPlateSpline)
-	d,c=tps.d,tps.c
+function tps_deform(x2,tps::ThinPlateSpline)
+	x1,d,c=tps.x1,tps.d,tps.c
 	d==[] && throw(ArgumentError("Affine component not available; run tps_solve with compute_affine=true."))
 
 	# deform
