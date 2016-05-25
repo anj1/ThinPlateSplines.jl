@@ -1,5 +1,6 @@
 module ThinPlateSplines
 
+export ThinPlateSpline
 export tps_solve, tps_energy, tps_deform
 
 type ThinPlateSpline
