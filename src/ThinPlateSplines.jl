@@ -15,7 +15,10 @@ end
 # Thin-plate splines.
 # based on http://en.wikipedia.org/wiki/Thin_plate_spline
 
-tps_basis(r) = abs(r)<eps(r) ? 0.0 : r*r*log(r)
+is_zero(r::AbstractFloat) = abs(r)<eps(r)
+is_zero(r) = false
+
+tps_basis(r::T) = is_zero(r) ? zero(T) : r*r*log(r)
 
 my_norm(a) = sqrt(sum(a.^2))
 
