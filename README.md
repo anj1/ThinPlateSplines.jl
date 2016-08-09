@@ -82,4 +82,4 @@ x2 = [0.0 1.0
 tps_deform(line,tps_solve(x1,x2,1.0))
 ```
 
-Gives a more complicated curve, with `y(t) = 1.472 + 0.603 t - 0.009 t² + ...`e
+Gives a more complicated curve, with `y(t) = 1.472 + 0.603 t - 0.009 t² + ...`. Note that this general idea can be extended to planes in 3D (or, indeed, higher-order dimensions) or even deformation of general geometric objects like spheres, etc.
