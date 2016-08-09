@@ -17,8 +17,10 @@ end
 
 tps_basis(r) = abs(r)<eps(r) ? 0.0 : r*r*log(r)
 
+my_norm(a) = sqrt(sum(a.^2))
+
 # x: matrix of size KxD
-tps_kernel(x) = [tps_basis(norm(x[i,:] - x[j,:])) for i=1:size(x,1),j=1:size(x,1)]
+tps_kernel(x) = [tps_basis(my_norm(x[i,:] - x[j,:])) for i=1:size(x,1),j=1:size(x,1)]
 
 # find solution of tps transformation
 # compute_affine: compute affine component
@@ -51,21 +53,20 @@ end
 # Thin-plate spline bending energy at minimum
 tps_energy(tps::ThinPlateSpline) = tps.λ*trace(tps.c*tps.Y')
 
-# Deform points according to thin-plate spline,
-# if affine component d and coefficients c are known.
-# x1 are coordinates of control points.
+# Deform points according to thin-plate spline.
+# tps is the thin-plate spline.
 # x2 are coordinates of points to be deformed.
-function tps_deform(x2,tps::ThinPlateSpline)
+function tps_deform{T}(x2::Matrix{T},tps::ThinPlateSpline)
 	x1,d,c=tps.x1,tps.d,tps.c
 	d==[] && throw(ArgumentError("Affine component not available; run tps_solve with compute_affine=true."))
 
 	# deform
-	y2 = zeros(size(x2,1),size(x2,2)+1)
+	y2 = zeros(T,size(x2,1),size(x2,2)+1)
 	for i = 1 : size(x2,1)
 		z = x2[i,:]
-		defc = zeros(1,size(x2,2)+1)
+		defc = zeros(T,1,size(x2,2)+1)
 		for j = 1 : size(x1,1)
-			defc += tps_basis(norm(z - x1[j,:]))*c[j,:]
+			defc += tps_basis(my_norm(z - x1[j,:]))*c[j,:]
 		end
 		y2[i,:] = cat(2, 1.0, z)*d + defc
 	end
