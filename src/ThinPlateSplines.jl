@@ -18,7 +18,7 @@ end
 is_zero(r::AbstractFloat) = abs(r)<eps(r)
 is_zero(r) = false
 
-tps_basis(r::T) = is_zero(r) ? zero(T) : r*r*log(r)
+tps_basis{T}(r::T) = is_zero(r) ? zero(T) : r*r*log(r)
 
 my_norm(a) = sqrt(sum(a.^2))
 
