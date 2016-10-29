@@ -66,12 +66,12 @@ function tps_deform{T}(x2::Matrix{T},tps::ThinPlateSpline)
 	# deform
 	y2 = zeros(T,size(x2,1),size(x2,2)+1)
 	for i = 1 : size(x2,1)
-		z = x2[i,:]
+		z = x2[i:i,:]
 		defc = zeros(T,1,size(x2,2)+1)
 		for j = 1 : size(x1,1)
-			defc += tps_basis(my_norm(z - x1[j,:]))*c[j,:]
+			defc += tps_basis(my_norm(z - x1[j:j,:]))*c[j:j,:]
 		end
-		y2[i,:] = cat(2, 1.0, z)*d + defc
+		y2[i:i,:] = cat(2, 1.0, z)*d + defc
 	end
 
 	y2[:,2:end]
