@@ -1,0 +1,4 @@
+name = "ThinPlateSplines"
+uuid = "1d861738-f48e-4029-b1d3-81ce6bc7f5ab"
+authors = ["Charlotte Haley <haleycharlotte@gmail.com>"]
+version = "0.1.0"
