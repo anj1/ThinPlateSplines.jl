@@ -44,3 +44,25 @@ end
 @testset "tps_energy" begin
     @test tps_energy(tps) ≈ 0
 end
+
+@testset "Three dimensions" begin
+  start_pts = [0 0 0; 0 0 1; 0 1 0; 1 0 0]
+  end_pts = [-0.7 -0.7 0; 0 0 1; 0 1 0; 1 0 0]
+  tps = tps_solve(start_pts, end_pts, 1.0)
+  deformed = tps_deform(start_pts, tps)
+  @test size(deformed,1) == size(start_pts, 1)
+  @test size(deformed,2) == size(start_pts, 2)
+  @test deformed ≈ end_pts
+  @test tps_deform([0.5 0.5 0.5], tps) ≈ [0.85 0.85 0.5]
+end
+
+@testset "Four dimensions" begin
+  start_pts = [0 0 0 0; 0 0 0 1; 0 0 1 0; 0 1 0 0; 1 0 0 0]
+  end_pts = [-0.7 -0.7 0 0; 0 0 0 1; 0 0 1 0; 0 1 0 0; 1 0 0 0]
+  tps = tps_solve(start_pts, end_pts, 1.0)
+  deformed = tps_deform(start_pts, tps)
+  @test size(deformed,1) == size(start_pts, 1)
+  @test size(deformed,2) == size(start_pts, 2)
+  @test deformed ≈ end_pts
+  @test tps_deform([0.5 0.5 0.5 0.5], tps) ≈ [1.2 1.2 0.5 0.5]
+end
