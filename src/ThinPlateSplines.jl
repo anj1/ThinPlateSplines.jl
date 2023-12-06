@@ -94,7 +94,7 @@ Thin-plate spline bending energy at the minimum.
 tps_energy(tps::ThinPlateSpline) = tps.λ*tr(tps.c*tps.Y')
 
 """
-	tps_deform(x2::AbstractArray, tps::ThinPlateSpline) 
+	tps_deform(x2::AbstractMatrix, tps::ThinPlateSpline) 
 
 calculate deformed locations of an input vector of positions`x2` according to thin-plate spline.
 Note that in combination with suitable interpolation packages can this be used to warp an image, but this function does not apply a warp by itself.
@@ -104,9 +104,10 @@ Yet it can be used to transform other mathematical structures rather than points
 	`x2`: coordinates of points to be deformed.
 	`tps`: the thin-plate spline structure of type `ThinPlateSpline` defining the deformation.
 """
-function tps_deform(x2::AbstractArray{T,D}, tps::ThinPlateSpline) where {T,D}
+function tps_deform(x2::AbstractMatrix{T}, tps::ThinPlateSpline) where {T}
     x1,d,c = tps.x1,tps.d,tps.c
 	d==[] && throw(ArgumentError("Affine component not available; run tps_solve with compute_affine=true."))
+	D = size(x2, 2)
     all_homo_z = cat(dims=2, ones(T, size(x2,1)), x2)
     # calculate sum of squares. Note that the summation is done outside the abs2
 	# it may be useful to join the terms below, but this seems a little harder than first thought
