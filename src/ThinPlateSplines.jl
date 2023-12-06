@@ -7,26 +7,26 @@ export ThinPlateSpline
 export tps_solve, tps_energy, tps_deform
 
 """
-	ThinPlateSpline
+	ThinPlateSpline{Λ,X,T}
 
 the type (structure) holding the deformation information. This is needed to apply the deformation to other points using `tps_deform`.
 (see http://en.wikipedia.org/wiki/Thin_plate_spline for more information)
 	
 # Members
-`λ`  # Stiffness.
-`x1` # control points
-`Y`  # Homogeneous control point coordinates
-`Φ`  # TPS kernel
-`d`  # Affine component
-`c`  # Non-affine component
+`λ::Λ`          # Stiffness.
+`x1::X`         # control points
+`Y::Matrix{T}`  # Homogeneous control point coordinates
+`Φ::Matrix{T}`  # TPS kernel
+`d::Matrix{T}`  # Affine component
+`c::Matrix{T}`  # Non-affine component
 """
-struct ThinPlateSpline
-	λ  # Stiffness.
-	x1 # control points
-	Y  # Homogeneous control point coordinates
-	Φ  # TPS kernel
-	d  # Affine component
-	c  # Non-affine component
+struct ThinPlateSpline{Λ,X,T}
+	λ::Λ          # Stiffness.
+	x1::Matrix{X} # control points
+	Y::Matrix{T}  # Homogeneous control point coordinates
+	Φ::Matrix{T}  # TPS kernel
+	d::Matrix{T}  # Affine component
+	c::Matrix{T}  # Non-affine component
 end
 
 # Thin-plate splines.
@@ -108,7 +108,7 @@ function tps_deform(x2::AbstractMatrix{T}, tps::ThinPlateSpline) where {T}
     x1,d,c = tps.x1,tps.d,tps.c
 	d==[] && throw(ArgumentError("Affine component not available; run tps_solve with compute_affine=true."))
 	D = size(x2, 2)
-    all_homo_z = cat(dims=2, ones(T, size(x2,1)), x2)
+    all_homo_z = hcat(ones(T, size(x2,1)), x2)
     # calculate sum of squares. Note that the summation is done outside the abs2
 	# it may be useful to join the terms below, but this seems a little harder than first thought
     @tullio sumsqr[k,j] := abs2(all_homo_z[k,m+1] .- x1[j,m])
