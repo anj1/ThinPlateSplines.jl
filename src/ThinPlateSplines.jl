@@ -7,26 +7,26 @@ export ThinPlateSpline
 export tps_solve, tps_energy, tps_deform
 
 """
-	ThinPlateSpline{Λ,X,T}
+	ThinPlateSpline{Λ,X,M}
 
 the type (structure) holding the deformation information. This is needed to apply the deformation to other points using `tps_deform`.
 (see http://en.wikipedia.org/wiki/Thin_plate_spline for more information)
 	
 # Members
-`λ::Λ`          # Stiffness.
-`x1::X`         # control points
-`Y::Matrix{T}`  # Homogeneous control point coordinates
-`Φ::Matrix{T}`  # TPS kernel
-`d::Matrix{T}`  # Affine component
-`c::Matrix{T}`  # Non-affine component
+`λ::Λ`  # Stiffness.
+`x1::X` # control points
+`Y::M`  # Homogeneous control point coordinates
+`Φ::M`  # TPS kernel
+`d::M`  # Affine component
+`c::M`  # Non-affine component
 """
-struct ThinPlateSpline{Λ,X <: AbstractMatrix,T}
-	λ::Λ          # Stiffness.
+struct ThinPlateSpline{Λ,X <: AbstractMatrix,M}
+	λ::Λ  # Stiffness.
 	x1::X # control points
-	Y::Matrix{T}  # Homogeneous control point coordinates
-	Φ::Matrix{T}  # TPS kernel
-	d::Matrix{T}  # Affine component
-	c::Matrix{T}  # Non-affine component
+	Y::M  # Homogeneous control point coordinates
+	Φ::M  # TPS kernel
+	d::M  # Affine component
+	c::M  # Non-affine component
 end
 
 # Thin-plate splines.
