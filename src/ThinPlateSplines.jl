@@ -7,26 +7,26 @@ export ThinPlateSpline
 export tps_solve, tps_energy, tps_deform
 
 """
-	ThinPlateSpline
+	ThinPlateSpline{Λ,X,M}
 
 the type (structure) holding the deformation information. This is needed to apply the deformation to other points using `tps_deform`.
 (see http://en.wikipedia.org/wiki/Thin_plate_spline for more information)
 	
 # Members
-`λ`  # Stiffness.
-`x1` # control points
-`Y`  # Homogeneous control point coordinates
-`Φ`  # TPS kernel
-`d`  # Affine component
-`c`  # Non-affine component
+`λ::Λ`  # Stiffness.
+`x1::X` # control points
+`Y::M`  # Homogeneous control point coordinates
+`Φ::M`  # TPS kernel
+`d::M`  # Affine component
+`c::M`  # Non-affine component
 """
-struct ThinPlateSpline
-	λ  # Stiffness.
-	x1 # control points
-	Y  # Homogeneous control point coordinates
-	Φ  # TPS kernel
-	d  # Affine component
-	c  # Non-affine component
+struct ThinPlateSpline{Λ,X <: AbstractMatrix,M}
+	λ::Λ  # Stiffness.
+	x1::X # control points
+	Y::M  # Homogeneous control point coordinates
+	Φ::M  # TPS kernel
+	d::M  # Affine component
+	c::M  # Non-affine component
 end
 
 # Thin-plate splines.
@@ -64,8 +64,8 @@ function tps_solve(x,y,λ; compute_affine=true)
 	K,D = size(x)
 
 	# homogeneous coordinates
-	X=cat(dims=2, ones(K,1),x)
-	Y=cat(dims=2, ones(K,1),y)
+	X=hcat(ones(K,1),x)
+	Y=hcat(ones(K,1),y)
 
 	# compute TPS kernel
 	Φ = tps_kernel(x)
@@ -79,7 +79,7 @@ function tps_solve(x,y,λ; compute_affine=true)
 	c = q2*inv(UniformScaling(λ) + q2'*Φ*q2)*q2'*Y
 
 	# affine component
-	d = compute_affine ?  r\(q1'*(Y - Φ*c)) : []
+	d = compute_affine ?  r\(q1'*(Y - Φ*c)) : eltype(c)[;;]
 	return ThinPlateSpline(λ,x,Y,Φ,d,c)
 end
 
@@ -108,7 +108,7 @@ function tps_deform(x2::AbstractMatrix{T}, tps::ThinPlateSpline) where {T}
     x1,d,c = tps.x1,tps.d,tps.c
 	d==[] && throw(ArgumentError("Affine component not available; run tps_solve with compute_affine=true."))
 	D = size(x2, 2)
-    all_homo_z = cat(dims=2, ones(T, size(x2,1)), x2)
+    all_homo_z = hcat(ones(T, size(x2,1)), x2)
     # calculate sum of squares. Note that the summation is done outside the abs2
 	# it may be useful to join the terms below, but this seems a little harder than first thought
     @tullio sumsqr[k,j] := abs2(all_homo_z[k,m+1] .- x1[j,m])
