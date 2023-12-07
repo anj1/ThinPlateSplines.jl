@@ -20,9 +20,9 @@ the type (structure) holding the deformation information. This is needed to appl
 `d::Matrix{T}`  # Affine component
 `c::Matrix{T}`  # Non-affine component
 """
-struct ThinPlateSpline{Λ,X,T}
+struct ThinPlateSpline{Λ,X <: AbstractMatrix,T}
 	λ::Λ          # Stiffness.
-	x1::Matrix{X} # control points
+	x1::X # control points
 	Y::Matrix{T}  # Homogeneous control point coordinates
 	Φ::Matrix{T}  # TPS kernel
 	d::Matrix{T}  # Affine component
