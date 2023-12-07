@@ -64,8 +64,8 @@ function tps_solve(x,y,λ; compute_affine=true)
 	K,D = size(x)
 
 	# homogeneous coordinates
-	X=cat(dims=2, ones(K,1),x)
-	Y=cat(dims=2, ones(K,1),y)
+	X=hcat(ones(K,1),x)
+	Y=hcat(ones(K,1),y)
 
 	# compute TPS kernel
 	Φ = tps_kernel(x)
