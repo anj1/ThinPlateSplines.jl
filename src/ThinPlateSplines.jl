@@ -79,7 +79,7 @@ function tps_solve(x,y,λ; compute_affine=true)
 	c = q2*inv(UniformScaling(λ) + q2'*Φ*q2)*q2'*Y
 
 	# affine component
-	d = compute_affine ?  r\(q1'*(Y - Φ*c)) : []
+	d = compute_affine ?  r\(q1'*(Y - Φ*c)) : eltype(c)[;;]
 	return ThinPlateSpline(λ,x,Y,Φ,d,c)
 end
 
