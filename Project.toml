@@ -8,9 +8,16 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Tullio = "bc48ee85-29a4-5162-ae0b-a64e1601d4bc"
 
+[weakdeps]
+GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
+
+[extensions]
+ThinPlateSplinesGeometryBasicsExt = "GeometryBasics"
+
 [compat]
 julia = "1, 1.6, 1.7, 1.8"
 Tullio = "0.3"
+GeometryBasics = "0.4"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
